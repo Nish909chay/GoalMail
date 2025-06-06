@@ -1,20 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Goal Reminder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoalMail</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- AOS.js for scroll animations -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <!-- Custom Styles -->
   <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+  <!-- vanilla-tilt.js for 3D tilt -->
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+  <!-- flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    body {
+      font-family: 'Space Grotesk', 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0f1a 0%, #121212 100%);
+      min-height: 100vh;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(28, 28, 46, 0.82);
+      box-shadow: 0 8px 32px 0 #FFD70033, 0 1.5px 8px 0 #FFB30033;
+      backdrop-filter: blur(18px);
+      border-radius: 2rem;
+      border: 2px solid rgba(255,215,0,0.18);
+      border-bottom: 2.5px solid #FFB30099;
+      border-top: 2.5px solid #FFD70099;
+      transition: box-shadow 0.4s, border 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 2rem;
+      pointer-events: none;
+      box-shadow: 0 0 32px 8px #FFD70044, 0 0 64px 16px #FFB30022;
+      z-index: 1;
+      filter: blur(2px);
+    }
+    .glass-card:hover {
+      box-shadow: 0 16px 64px 0 #FFD70066, 0 2.5px 16px 0 #FFB30066;
+      border-color: #FFD700;
+    }
+    .glow-input {
+      background: rgba(28,28,46,0.95);
+      border: 1.5px solid #4b3e1a;
+      color: #fff;
+      box-shadow: 0 2px 12px 0 #FFD70011 inset, 0 1.5px 8px 0 #FFB30011 inset;
+      transition: box-shadow 0.3s, border 0.3s, background 0.3s;
+      text-shadow: 0 1px 4px #FFD70022;
+      position: relative;
+      z-index: 2;
+    }
+    .glow-input:focus, .glow-input:hover {
+      box-shadow: 0 0 0 2px #FFD700, 0 0 16px #FFB30099, 0 2px 12px 0 #FFD70033 inset;
+      border-color: #FFD700;
+      outline: none;
+      background: #18182a;
+      animation: input-glow 0.4s;
+    }
+    @keyframes input-glow {
+      0% { box-shadow: 0 0 0 0 #FFD70000; }
+      100% { box-shadow: 0 0 0 2px #FFD700, 0 0 16px #FFB30099; }
+    }
+    .glow-btn {
+      background: linear-gradient(90deg, #FFD700 0%, #FFB300 100%);
+      color: #18181b;
+      font-weight: 700;
+      box-shadow: 0 2px 24px 0 #FFD70055, 0 1.5px 8px 0 #FFB30033;
+      border: none;
+      border-radius: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.4s;
+      position: relative;
+      overflow: hidden;
+      text-shadow: 0 1px 8px #FFD70044;
+    }
+    .glow-btn::after {
+      content: '';
+      position: absolute;
+      left: -50%;
+      top: 0;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(120deg, #FFD70044 0%, #FFB30044 100%);
+      opacity: 0.2;
+      z-index: 0;
+      transition: opacity 0.3s;
+    }
+    .glow-btn:hover {
+      transform: scale(1.07) perspective(120px) rotateX(6deg) rotateY(-6deg);
+      box-shadow: 0 8px 48px 0 #FFD700cc, 0 2.5px 16px 0 #FFB300cc;
+      background: linear-gradient(270deg, #FFB300 0%, #FFD700 100%);
+    }
+    .glow-btn:active {
+      filter: brightness(1.1);
+      box-shadow: 0 2px 24px 0 #FFD70099;
+    }
+    .glow-btn span {
+      position: relative;
+      z-index: 2;
+    }
+    .glow-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #FFD700, 0 0 16px #FFB30099;
+    }
+    .glow-btn:hover::after {
+      opacity: 0.4;
+      animation: btn-gradient-move 1.2s linear infinite;
+    }
+    @keyframes btn-gradient-move {
+      0% { left: -50%; }
+      100% { left: 100%; }
+    }
+    .glass-card, .glow-input, .glow-btn {
+      text-shadow: 0 1px 8px #FFD70022;
+    }
+    #msg {
+      min-height: 32px;
+      transition: all 0.3s;
+      text-shadow: 0 1px 8px #FFD70044;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #23272f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00ffd033;
+      border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+      .glass-card {
+        padding: 1.5rem !important;
+        border-radius: 1rem !important;
+      }
+      header h1 {
+        font-size: 2rem !important;
+      }
+    }
+  </style>
 </head>
-<body>
-  <form id="goalForm">
-    <input name="name" placeholder="Name" required><br>
-    <input name="email" type="email" placeholder="Email" required><br>
-    <input name="goal" placeholder="Your Goal" required><br>
-    <input name="deadline" type="date" required><br>
-    <button type="submit">Submit</button>
-  </form>
-  <div id="msg"></div>
+<body class="flex flex-col min-h-screen justify-between">
+  <header class="w-full text-center py-8" data-aos="fade-down">
+    <h1 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent drop-shadow-lg select-none" style="text-shadow: 0 2px 24px #FFD70099;">⚡ GoalMail</h1>
+    <p class="mt-2 text-lg text-yellow-300 font-medium" style="text-shadow: 0 1px 8px #FFD70044;">Set your short-term goals.   Get reminded.</p>
+  </header>
+  <main class="flex-1 flex flex-col items-center justify-center px-4">
+    <div class="glass-card p-8 w-full max-w-md mx-auto" data-tilt data-tilt-max="12" data-aos="zoom-in">
+      <form id="goalForm" class="flex flex-col gap-6 bg-[#18182a] bg-opacity-80 rounded-2xl shadow-inner shadow-yellow-900/40 border border-yellow-900/30 p-6 md:p-8" style="backdrop-filter: blur(6px);">
+        <input name="name" type="text" placeholder="Your Name" required class="glow-input px-4 py-3 rounded-xl bg-[#1c1c2e] border border-yellow-700 text-lg transition-all" />
+        <input name="email" type="email" placeholder="Email Address" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" class="glow-input px-4 py-3 rounded-xl bg-[#1c1c2e] border border-yellow-700 text-lg transition-all" />
+        <input name="goal" type="text" placeholder="Your Goal" required class="glow-input px-4 py-3 rounded-xl bg-[#1c1c2e] border border-yellow-700 text-lg transition-all" />
+        <input name="deadline" type="date" required placeholder="Select deadline date" class="glow-input px-4 py-3 rounded-xl bg-[#1c1c2e] border border-yellow-700 text-lg transition-all" />
+        <button type="submit" class="glow-btn rounded-xl py-3 text-lg mt-2 shadow-lg"><span>Set Goal</span></button>
+      </form>
+      <div id="msg" class="mt-6 text-center text-cyan-300 font-semibold text-lg min-h-[32px] transition-all"></div>
+    </div>
+  </main>
+  <footer class="w-full text-center py-6 text-yellow-400 text-sm select-none" data-aos="fade-up">
+    Made with ⚡️ by <a href="https://github.com/Nish909chay" class="text-yellow-400 hover:underline">Nish909chay</a>
+  </footer>
   <script src="app.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    AOS.init({ duration: 1200, once: true });
+    VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+      max: 12,
+      speed: 600,
+      glare: true,
+      "max-glare": 0.22,
+      scale: 1.06,
+      perspective: 900
+    });
+    // Micro-interaction: ripple effect on input focus
+    document.querySelectorAll('.glow-input').forEach(input => {
+      input.addEventListener('focus', function(e) {
+        this.classList.add('ring', 'ring-yellow-400', 'ring-opacity-60');
+        setTimeout(() => this.classList.remove('ring', 'ring-yellow-400', 'ring-opacity-60'), 400);
+      });
+    });
+    // Initialize flatpickr for gold-themed date picker
+    flatpickr("input[name='deadline']", {});
+  </script>
 </body>
 </html>

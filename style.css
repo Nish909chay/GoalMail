@@ -1,6 +1,9 @@
+/* Custom dark, glassy, glowing, and 3D UI enhancements for GoalMail */
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
+  background: linear-gradient(135deg, #18181b 0%, #23272f 100%);
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+  color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,4 +38,140 @@ button:hover {
   margin-top: 20px;
   color: green;
   font-weight: bold;
+  min-height: 32px;
+  transition: all 0.3s;
+}
+
+.glass-card {
+  background: rgba(30, 32, 38, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: box-shadow 0.3s;
+}
+.glass-card:hover {
+  box-shadow: 0 12px 48px 0 #00ffd0a0, 0 1.5px 8px 0 #00ffd0a0;
+}
+
+.glow-input:focus, .glow-input:hover {
+  box-shadow: 0 0 0 2px #00ffd0, 0 0 8px #00ffd080;
+  border-color: #00ffd0;
+  outline: none;
+  background: #23272f;
+}
+
+.glow-btn {
+  background: linear-gradient(90deg, #00ffd0 0%, #007cf0 100%);
+  color: #18181b;
+  font-weight: 700;
+  box-shadow: 0 2px 16px 0 #00ffd0a0;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+}
+.glow-btn:hover {
+  transform: scale(1.05) perspective(120px) rotateX(4deg) rotateY(-4deg);
+  box-shadow: 0 4px 32px 0 #00ffd0cc, 0 1.5px 8px 0 #00ffd0a0;
+  background: linear-gradient(90deg, #007cf0 0%, #00ffd0 100%);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #23272f;
+}
+::-webkit-scrollbar-thumb {
+  background: #00ffd033;
+  border-radius: 8px;
+}
+
+/* === Gold Dark Date Picker Theme (flatpickr override) === */
+.flatpickr-calendar {
+  background: rgba(28,28,28,0.98) !important;
+  color: #eaeaea !important;
+  border: 1.5px solid #FFD700 !important;
+  box-shadow: 0 8px 32px 0 #FFD70033, 0 1.5px 8px 0 #FFB30033 !important;
+  backdrop-filter: blur(10px);
+  border-radius: 1.25rem !important;
+  font-family: 'Space Grotesk', 'Poppins', sans-serif;
+}
+.flatpickr-months, .flatpickr-weekdays {
+  background: transparent !important;
+  color: #FFD700 !important;
+}
+.flatpickr-current-month, .flatpickr-prev-month, .flatpickr-next-month {
+  color: #FFD700 !important;
+}
+.flatpickr-day {
+  background: transparent !important;
+  color: #eaeaea !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid transparent !important;
+  transition: box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+.flatpickr-day:hover, .flatpickr-day:focus {
+  box-shadow: 0 0 0 2px #FFD70099;
+  color: #FFD700 !important;
+  border: 1px solid #FFD700 !important;
+  background: rgba(255,215,0,0.08) !important;
+  text-decoration: underline;
+}
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+  background: #FFD700 !important;
+  color: #111 !important;
+  box-shadow: 0 2px 12px #FFD70055;
+  border: 1.5px solid #FFD700 !important;
+}
+.flatpickr-day.today {
+  border: 1.5px solid #FFD700 !important;
+  color: #FFD700 !important;
+  background: rgba(255,215,0,0.12) !important;
+}
+.flatpickr-day.flatpickr-disabled, .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay {
+  color: #555 !important;
+  background: transparent !important;
+  opacity: 0.5;
+}
+.flatpickr-weekday {
+  color: #FFD700 !important;
+  font-weight: 600;
+}
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
+  fill: #FFD700 !important;
+  stroke: #FFD700 !important;
+  opacity: 0.9;
+  transition: filter 0.2s;
+}
+.flatpickr-months .flatpickr-prev-month:hover, .flatpickr-months .flatpickr-next-month:hover {
+  filter: drop-shadow(0 0 6px #FFD700cc);
+}
+.flatpickr-button, .flatpickr-clear, .flatpickr-today {
+  background: transparent !important;
+  border: 1px solid #FFD700 !important;
+  color: #FFD700 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.25em 0.75em !important;
+  margin: 0 0.25em;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 600;
+}
+.flatpickr-button:hover, .flatpickr-clear:hover, .flatpickr-today:hover {
+  background: #FFD700 !important;
+  color: #111 !important;
+}
+.flatpickr-calendar.arrowTop:before, .flatpickr-calendar.arrowTop:after {
+  border-bottom-color: #FFD700 !important;
+}
+.flatpickr-calendar.arrowBottom:before, .flatpickr-calendar.arrowBottom:after {
+  border-top-color: #FFD700 !important;
+}
+/* === End Gold Date Picker Theme === */
+
+@media (max-width: 600px) {
+  .glass-card {
+    padding: 1.5rem !important;
+    border-radius: 1rem !important;
+  }
+  header h1 {
+    font-size: 2rem !important;
+  }
 }
