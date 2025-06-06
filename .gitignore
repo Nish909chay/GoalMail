@@ -1,0 +1,11 @@
+# Node
+node_modules/
+.env
+
+# Firebase
+.firebase/
+.firebaserc
+.firebase.json
+
+# VSCode
+.vscode/
