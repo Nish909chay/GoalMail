@@ -1,9 +1,9 @@
 name: Scheduled Goal Reminder
 
-on:
-  schedule:
-    - cron: '*/15 * * * *'
-  workflow_dispatch:
+# on:
+  # schedule:
+    # - cron: '*/15 * * * *'
+  # workflow_dispatch:
 
 jobs:
   send-reminders:
